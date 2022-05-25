@@ -7,7 +7,41 @@
     top:710px;
     left:760px;
 }
+#infos{
+    width:1920px;
+    position:absolute;
+    top:920px;
+    display: flex;
+    flex-direction: row;
+}
 .infobar{
     position:absolute;
     top:920px;
 }
+.containerInfo{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 1%;
+    color:#ff0000;
+    font-weight: bold;
+}
+.containerInfoBalas{
+    width: 285px;
+}
+.containerInfoVida{
+    width: 440px;
+}
+.containerInfoAbates{
+    width: 270px;
+}
+.infoNumber{
+    font-size: 40pt;
+}
+.infoDescription{
+    font-size: 25pt;
+    font-weight: bold;
+    color:gray;
+}
+
