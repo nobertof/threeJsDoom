@@ -1,0 +1,13 @@
+*,body{
+    margin:0;
+    padding:0;
+}
+#character{
+    position:absolute;
+    top:710px;
+    left:760px;
+}
+.infobar{
+    position:absolute;
+    top:920px;
+}
