@@ -1,11 +1,14 @@
 function setInfo(value, infoId) {
   document.getElementById(infoId).innerHTML = `${value}`;
 }
-
+function getElement(infoId){
+  return document.getElementById(infoId);
+}
 function iniciar() {
   let balas = 100;
   let vida = 100;
   let abates = 0;
+  const body = getElement("body_tela_game");
   setInfo(balas, 'balas');
   setInfo(vida, 'vida');
   setInfo(abates, 'abates');
@@ -25,7 +28,7 @@ function iniciar() {
 
   // carregando arquivo de som
   const audioLoaderWalk = new THREE.AudioLoader();
-  audioLoaderWalk.load('./sounds/bonecoAndando.wav', function (buffer) {
+  audioLoaderWalk.load('../../sounds/bonecoAndando.wav', function (buffer) {
     soundWalk.setBuffer(buffer);
     soundWalk.setLoop(true);
     soundWalk.setVolume(0.5);
@@ -40,7 +43,7 @@ function iniciar() {
 
   // carregando arquivo de som
   const audioLoaderShoot = new THREE.AudioLoader();
-  audioLoaderShoot.load('./sounds/tiroComShortGun.ogg', function (buffer) {
+  audioLoaderShoot.load('../../sounds/tiroComShortGun.ogg', function (buffer) {
     soundShoot.setBuffer(buffer);
     soundShoot.setLoop(true);
     soundShoot.setVolume(0.5);
@@ -124,7 +127,7 @@ function iniciar() {
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
   geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
-  const texture = new THREE.TextureLoader().load('images/textura3.png');
+  const texture = new THREE.TextureLoader().load('../../images/textura3.png');
 
   const material = new THREE.MeshBasicMaterial({
     map: texture,
@@ -201,10 +204,10 @@ function iniciar() {
       balas--;
       setInfo(balas, 'balas');
       soundShoot.play()
-      character.src = './images/shortgun-shoot.png';
+      character.src = '../../images/shortgun-shoot.png';
       character.style = "top:620px!important";
       const timeOut = window.setTimeout(() => {
-        character.src = './images/shortgun.png';
+        character.src = '../../images/shortgun.png';
         character.style = "top:710px!important";
         soundShoot.pause();
       }, 800);
@@ -220,7 +223,7 @@ function iniciar() {
 
   };
   animate();
-  document.body.appendChild(renderer.domElement);
+  body.appendChild(renderer.domElement);
 }
 document.addEventListener("DOMContentLoaded", function (event) {
   iniciar();
