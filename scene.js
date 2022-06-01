@@ -154,16 +154,10 @@ function iniciar() {
     }
     if (e.code === "KeyE") {
       if (balas > 0) {
-        soundShoot.play();
         // balas--;
         tiroAtual = true
-        setInfo(balas, 'balas');
-        character.src = './images/shortgun-shoot.png';
-        character.style = "top:620px!important";
       } else {
-        soundShoot.pause();
-        character.src = './images/shortgun.png';
-        character.style = "top:710px!important";
+        tiroAtual = false
         alert("as balas acabaram!");
       }
     }
@@ -186,11 +180,7 @@ function iniciar() {
       deltaTeta = 0
     }
     if (e.code === "KeyE") {
-      soundShoot.setLoopStart(0)
       tiroAtual = false
-      soundShoot.pause()
-      character.src = './images/shortgun.png';
-      character.style = "top:710px!important";
     }
   }
   const cloud = new THREE.Mesh(geometry, material);
@@ -213,7 +203,13 @@ function iniciar() {
       soundShoot.play()
       character.src = './images/shortgun-shoot.png';
       character.style = "top:620px!important";
+      const timeOut = window.setTimeout(() => {
+        character.src = './images/shortgun.png';
+        character.style = "top:710px!important";
+        soundShoot.pause();
+      }, 800);
     }
+    
     tiroAnterior = tiroAtual;
     
     camera.position.z += -velocidade * Math.cos(angulo)
