@@ -1,8 +1,14 @@
 function setInfo(value, infoId) {
   document.getElementById(infoId).innerHTML = `${value}`;
 }
-function getElement(infoId){
+function getElement(infoId) {
   return document.getElementById(infoId);
+}
+function makeShoot({ position }) {
+  const geometry = new THREE.SphereGeometry(15, 32, 16);
+  const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+  const sphere = new THREE.Mesh(geometry, material);
+  return sphere;
 }
 function iniciar() {
   let balas = 100;
@@ -18,7 +24,7 @@ function iniciar() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-
+  scene.background = new THREE.TextureLoader().load('../../images/hell_sky.png')
   const walk = new THREE.AudioListener();
 
   camera.add(walk);
@@ -45,94 +51,27 @@ function iniciar() {
   const audioLoaderShoot = new THREE.AudioLoader();
   audioLoaderShoot.load('../../sounds/tiroComShortGun.ogg', function (buffer) {
     soundShoot.setBuffer(buffer);
-    soundShoot.setLoop(true);
+    soundShoot.setLoop(false);
     soundShoot.setVolume(0.5);
 
   });
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize(width, height);
-  let uv00 = [0.0, 0.0]
-  let uv10 = [1.0, 0.0]
-  let uv01 = [0.0, 1.0]
-  let uv11 = [1.0, 1.0]
-  const points = [
-    [2, 0, 0],
-    [-2, 0, 0],
-    [2, 4, 0],
-    [-2, 4, 0],
-    [2, 0, 4],
-    [-2, 0, 4],
-    [2, 4, 4],
-    [-2, 4, 4],
-  ]
-  const vertices = [
-    //face de trás
-    { pos: points[0], uv: uv11 },
-    { pos: points[1], uv: uv01 },
-    { pos: points[2], uv: uv10 },
+  const chao = new THREE.TextureLoader().load('../../images/chaodoom.jpg');
+  const meshFloor = new THREE.Mesh(
+    new THREE.PlaneGeometry(100, 100, 100, 100),
+    new THREE.MeshBasicMaterial({ map: chao })
+  );
+  const enemy = new THREE.TextureLoader().load('../../images/enemy.png');
+  const meshEnemy = new THREE.Mesh(
+    new THREE.PlaneGeometry(3, 3, 3, 3),
+    new THREE.MeshBasicMaterial({ map: enemy, transparent: true, side: THREE.DoubleSide })
+  );
+  meshEnemy.position.y = 1.5
+  scene.add(meshFloor);
+  meshFloor.rotation.x -= Math.PI / 2;
+  scene.add(meshEnemy);
 
-    { pos: points[1], uv: uv01 },
-    { pos: points[2], uv: uv10 },
-    { pos: points[3], uv: uv00 },
-    //face da direita
-    { pos: points[0], uv: uv11 },
-    { pos: points[4], uv: uv01 },
-    { pos: points[6], uv: uv10 },
-
-    { pos: points[0], uv: uv01 },
-    { pos: points[2], uv: uv10 },
-    { pos: points[6], uv: uv00 },
-    //face de esquerda
-    { pos: points[1], uv: uv11 },
-    { pos: points[5], uv: uv01 },
-    { pos: points[3], uv: uv10 },
-
-    { pos: points[5], uv: uv01 },
-    { pos: points[3], uv: uv10 },
-    { pos: points[7], uv: uv00 },
-    //face de baixo
-    { pos: points[4], uv: uv11 },
-    { pos: points[5], uv: uv01 },
-    { pos: points[0], uv: uv10 },
-
-    { pos: points[5], uv: uv01 },
-    { pos: points[0], uv: uv10 },
-    { pos: points[1], uv: uv00 },
-    // //face de cima
-    { pos: points[6], uv: uv11 },
-    { pos: points[7], uv: uv01 },
-    { pos: points[2], uv: uv10 },
-
-    { pos: points[7], uv: uv01 },
-    { pos: points[2], uv: uv10 },
-    { pos: points[3], uv: uv00 },
-    // //face da frente
-    { pos: points[4], uv: uv11 },
-    { pos: points[5], uv: uv01 },
-    { pos: points[6], uv: uv10 },
-
-    { pos: points[5], uv: uv01 },
-    { pos: points[6], uv: uv10 },
-    { pos: points[7], uv: uv00 },
-
-  ];
-  const positions = [];
-  const uvs = [];
-  for (const vertex of vertices) {
-    positions.push(...vertex.pos);
-    uvs.push(...vertex.uv);
-  }
-  const positionNumComponents = 3;
-  const uvNumComponents = 2;
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
-  geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
-  const texture = new THREE.TextureLoader().load('../../images/textura3.png');
-
-  const material = new THREE.MeshBasicMaterial({
-    map: texture,
-    side: THREE.DoubleSide
-  });
   let deltaTeta = 0.0
   let angulo = 0.0
   let velocidade = 0.0
@@ -186,35 +125,32 @@ function iniciar() {
       tiroAtual = false
     }
   }
-  const cloud = new THREE.Mesh(geometry, material);
-  const cloud2 = new THREE.Mesh(geometry, material);
 
-  scene.add(cloud);
-  scene.add(cloud2);
   camera.position.z = 13;
   camera.position.y = 2;
   camera.position.x = 0;
-  cloud2.position.x = 3;
 
   const animate = function () {
     angulo += deltaTeta
-    //cloud.position.z += -velocidade*Math.cos(angulo)
-    //cloud.position.x += -velocidade*Math.sin(angulo)
     if (tiroAtual && tiroAnterior != tiroAtual) {
       balas--;
       setInfo(balas, 'balas');
+
       soundShoot.play()
       character.src = '../../images/shortgun-shoot.png';
-      character.style = "top:620px!important";
-      const timeOut = window.setTimeout(() => {
+      character.style = "top:55vh!important";
+      window.setTimeout(() => {
         character.src = '../../images/shortgun.png';
-        character.style = "top:710px!important";
+        character.style = "top:65vh!important";
+        soundShoot.isPlaying = false;
+        soundShoot.offset = 0;
         soundShoot.pause();
       }, 800);
+      
     }
-    
+
     tiroAnterior = tiroAtual;
-    
+
     camera.position.z += -velocidade * Math.cos(angulo)
     camera.position.x += -velocidade * Math.sin(angulo)
     camera.lookAt(camera.position.x - Math.sin(angulo), 2, camera.position.z - Math.cos(angulo))

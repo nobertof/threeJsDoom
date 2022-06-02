@@ -9,20 +9,20 @@
 
 #character{
     position:absolute;
-    top:710px;
-    left:760px;
+    top:65vh;
+    left:40vw;
 }
 #infos{
-    width:1920px;
+    width:100vw;
     position:absolute;
-    top:920px;
+    top:85vh;
     display: flex;
     flex-direction: row;
 }
 .infobar{
     position:absolute;
     width: 100vw;
-    top:920px;
+    top:85vh;
 }
 .containerInfo{
     display:flex;
