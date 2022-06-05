@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tela inicial</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            const frases = ['Você pode fazer melhor!', 'Não desista, tente novamente!', 'Mesmo que pareça difícil, não pare!', 'Aprenda a lidar com as situações do melhor jeito!']
+            const frase = document.getElementById('fraseMotivacional');
+            frase.innerHTML = frases[Math.floor(Math.random() * frases.length)]
+        });
+    </script>
+</head>
+
+<body>
+
+
+    <div class="mainContainer">
+
+        <h1 class="mainTitle">GAME OVER!</h1>
+        <p class="subtitle" id="fraseMotivacional">Você pode fazer melhor!</p>
+    </div>
+    <a href="../index.html" class="btn">Voltar</a>
+</body>
+
+</html>

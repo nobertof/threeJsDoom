@@ -4,7 +4,7 @@
 }
 @font-face {
     font-family: 'AmazDoom';
-    src: url('../css/AmazDooMRight2.ttf') format('truetype');
+    src: url('../../../fonts/AmazDooMLeft2.ttf') format('truetype');
 }
 
 #character{
@@ -49,5 +49,26 @@
     font-size: 25pt;
     font-weight: bold;
     color:gray;
+}
+.objetivo{
+    position:absolute;
+    top:2vh;
+    left:2vw;
+    color:#ffffff;
+    width: 40vw;
+    height: 20vh;
+}
+.objetivo h4{
+    font-size: 36pt;
+    font-family: 'AmazDoom';
+}
+.objetivo p{
+    font-family: sans-serif;
+    margin-top:1%;
+}
+.objetivo span{
+    background-color: #f39c12;
+    padding: 1%;
+    border-radius: 100px;
 }
 

@@ -7,7 +7,9 @@ camera.position.y = 2;
 camera.position.x = 0;
 let enemyId = 0;
 const mapWalls = []
+let objetivo = 10
 let enemys = []
+let qtdInimigos = 1;
 function setInfo(value, infoId) {
   document.getElementById(infoId).innerHTML = `${value}`;
 }
@@ -159,7 +161,7 @@ function keyMovements(player) {
         player.movements.tiroAtual = true
       } else {
         player.movements.tiroAtual = false
-        alert("as balas acabaram!");
+        window.location.href='http://127.0.0.1:5500/screens/telaGameOver/index.html'
       }
     }
 
@@ -200,12 +202,13 @@ function addFloor() {
 
 function enemy({position}){
   const enemy = new THREE.TextureLoader().load('../../images/enemy.png');
+
   const meshEnemy = new THREE.Mesh(
     new THREE.PlaneGeometry(3, 3, 3, 3),
     new THREE.MeshBasicMaterial({ map: enemy, transparent: true, side: THREE.DoubleSide })
   );
+  const typeEnemy = Math.floor(Math.random()*3);
   meshEnemy.position.set(...position)
-    console.log(meshEnemy.position)
   //criando a caixa de colisão
   let colisionBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
   colisionBox.setFromObject(meshEnemy);
@@ -214,11 +217,12 @@ function enemy({position}){
   return {
     id:enemyId,
     object:meshEnemy,
-    colisionBox
+    colisionBox,
+    typeEnemy
   }
 }
 function addWallsLimits() {
-  const wallTexture = new THREE.TextureLoader().load('../../images/chaodoom.jpg');
+  const wallTexture = new THREE.TextureLoader().load('../../images/parede.png');
   const wallsInfos = [
     {
       length:[100, 5, 5, 30],
@@ -257,6 +261,7 @@ function addWallsLimits() {
 
 }
 function iniciar() {
+  setInfo(`<span>Elimine ${objetivo} monstros!<span>`, 'objetivo');
   const playerObject = player();
   const body = getElement("body_tela_game");
   scene.background = new THREE.TextureLoader().load('../../images/hell_sky.png')
@@ -279,35 +284,39 @@ function iniciar() {
     
     window.setInterval(()=>{
       if(enemys.length==0){
-
-        [0,1].map(value=>{
+        for(let i =0; i<qtdInimigos;i++){
           enemys.push(new enemy({position:[Math.random()*50, 1.5, Math.random()*50]}))
-        })
-        
+        }
+        qtdInimigos++;
       }
 
     },2000);
     enemys.map(e=>{
       if(camera.position.x>e.object.position.x){
-        e.object.position.x +=0.1
+        e.object.position.x +=Math.random()*0.2
       }
       if(camera.position.x<e.object.position.x){
-        e.object.position.x -=0.1
+        e.object.position.x -=Math.random()*0.2
       }
       if(camera.position.y>e.object.position.y){
-        e.object.position.y +=0.1
+        e.object.position.y +=Math.random()*0.2
       }
       if(camera.position.y<e.object.position.y){
-        e.object.position.y -=0.1
+        e.object.position.y -=Math.random()*0.2
       }
       if(camera.position.z>e.object.position.z){
-        e.object.position.z +=0.1
+        e.object.position.z +=Math.random()*0.2
       }
       if(camera.position.z<e.object.position.z){
-        e.object.position.z -=0.1
+        e.object.position.z -=Math.random()*0.2
       }
       if (checkCollision(playerObject.colisionObject.colisionBox, e.colisionBox)) {
-        playerObject.infos.vida--;
+        
+        if(playerObject.infos.vida==0){
+          window.location.href='http://127.0.0.1:5500/screens/telaGameOver/index.html'
+        }else{
+          playerObject.infos.vida--;
+        }
         setInfo(playerObject.infos.vida, 'vida');
 
       }
@@ -326,10 +335,34 @@ function iniciar() {
       enemys.map(e=>{
         if (checkCollision(b.colisionBox, e.colisionBox)) {
           scene.remove(e.object);
+          if(e.typeEnemy===0){
+            playerObject.infos.balas+=Math.ceil(Math.random()*5);
+          }else if(e.typeEnemy===1){
+            if(playerObject.infos.vida<100){
+              playerObject.infos.vida+=Math.ceil(Math.random()*5);
+              if(playerObject.infos.vida>100){
+                playerObject.infos.vida=100;
+              }
+            }
+          }else if(e.typeEnemy===2){
+            playerObject.infos.balas+=Math.ceil(Math.random()*5);
+            if(playerObject.infos.vida<100){
+              playerObject.infos.vida+=Math.ceil(Math.random()*5);
+              if(playerObject.infos.vida>100){
+                playerObject.infos.vida=100;
+              }
+            }
+          }
+          objetivo--;
+          if(objetivo==0){
+            window.location.href='http://127.0.0.1:5500/screens/telaWin/index.html'
+          }
           playerObject.infos.abates++;
           enemys = enemys.filter(e2=>e2.id!=e.id);
+          setInfo(`<span>Elimine ${objetivo} monstros!<span>`, 'objetivo');
+          setInfo(playerObject.infos.vida, 'vida');
+          setInfo(playerObject.infos.balas, 'balas');
           setInfo(playerObject.infos.abates, 'abates');
-
         }
       })
       window.setTimeout(() => {
