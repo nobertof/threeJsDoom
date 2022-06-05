@@ -34,13 +34,19 @@
     font-weight: bold;
 }
 .containerInfoBalas{
-    margin-left:5%;
+    width: 10vw;
+    height: 10vh;
+    margin-left:3%;
 }
 .containerInfoVida{
-    margin-left:13%;
+    width: 10vw;
+    height: 10vh;
+    margin-left:8%;
 }
 .containerInfoAbates{
-    margin-left:12%;
+    width: 10vw;
+    height: 10vh;
+    margin-left:9%;
 }
 .infoNumber{
     font-size: 40pt;

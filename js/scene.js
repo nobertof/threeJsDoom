@@ -201,7 +201,8 @@ function addFloor() {
 }
 
 function enemy({position}){
-  const enemy = new THREE.TextureLoader().load('../../images/enemy.png');
+  const textures = ['../../images/enemy.png','../../images/enemy2.png','../../images/enemy3.png','../../images/enemy4.png']
+  const enemy = new THREE.TextureLoader().load(textures[Math.floor(Math.random()*4)]);
 
   const meshEnemy = new THREE.Mesh(
     new THREE.PlaneGeometry(3, 3, 3, 3),
